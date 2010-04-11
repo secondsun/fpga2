@@ -3,9 +3,6 @@
 \begin_document
 \begin_header
 \textclass article
-\begin_preamble
-\usepackage{a4wide}
-\end_preamble
 \use_default_options true
 \language english
 \inputencoding auto
@@ -24,12 +21,16 @@
 \spacing other 1.5
 \use_hyperref false
 \papersize a4paper
-\use_geometry false
+\use_geometry true
 \use_amsmath 1
 \use_esint 1
 \cite_engine basic
 \use_bibtopic false
 \paperorientation portrait
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation skip
@@ -239,10 +240,6 @@ The third and final objective is to provide a means to easily display the
  the graphics accelerator to be used with many different system platforms.
  An output connection, as well as the underlying hardware controller for
  the selected format, should be provided.
-\begin_inset Newpage pagebreak
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsection
@@ -266,7 +263,7 @@ The design for this project includes 5 subsystems.
 placement H
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
