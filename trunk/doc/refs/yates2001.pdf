@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html dir=ltr>
+<head>
+<style>
+a:link			{font:8pt/11pt verdana; color:FF0000}
+a:visited		{font:8pt/11pt verdana; color:#4e4e4e}
+</style>
+<META NAME="ROBOTS" CONTENT="NOINDEX">
+<title>The page cannot be found</title>
+<META HTTP-EQUIV="Content-Type" Content="text-html; charset=Windows-1252">
+</head>
+<script> 
+function Init(){
+	DocURL = document.URL;
+	protocolIndex=DocURL.indexOf("://",4);
+	serverIndex=DocURL.indexOf("/",protocolIndex + 3);
+	BeginURL=DocURL.indexOf("#",1) + 1;
+	urlresult=DocURL.substring(BeginURL,serverIndex);				
+	displayresult=DocURL.substring(protocolIndex + 3 ,serverIndex);
+
+}
+function Homepage(){
+<!--
+	InsertElementAnchor(urlresult, displayresult);
+}
+Init();
+RedirectOnTilde();
+
+function RedirectOnTilde()
+{
+	urlresultsize = urlresult.length ;
+	docurlsize    = DocURL.length;	
+	if (docurlsize < urlresultsize+5){return;}
+	if (DocURL.charAt(urlresultsize+1)  == '~'){
+		newurl = urlresult+"/" +DocURL.charAt(urlresultsize+2) + "/"+ DocURL.charAt(urlresultsize+3) + "/" +DocURL.substr(urlresultsize+2,docurlsize) ;
+		window.location.href=newurl;
+	}
+	if (docurlsize < urlresultsize+12){	return;	}
+	if (DocURL.charAt(urlresultsize+2)  != '/' && DocURL.charAt(urlresultsize+4) == '/'){
+		newurl = urlresult+ DocURL.substr(urlresultsize+4,docurlsize) ;
+		window.location.href=newurl;
+	}	
+}
+function HtmlEncode(text){
+    return text.replace(/&/g, '&amp').replace(/'/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function TagAttrib(name, value){
+    return ' '+name+'="'+HtmlEncode(value)+'"';
+}
+
+function PrintTag(tagName, needCloseTag, attrib, inner){
+    document.write( '<' + tagName + attrib + '>' + HtmlEncode(inner) );
+    if (needCloseTag) document.write( '</' + tagName +'>' );
+}
+function URI(href){
+    IEVer = window.navigator.appVersion;
+    IEVer = IEVer.substr( IEVer.indexOf('MSIE') + 5, 3 );
+    return (IEVer.charAt(1)=='.' && IEVer >= '5.5') ?
+        encodeURI(href) :
+        escape(href).replace(/%3A/g, ':').replace(/%3B/g, ';');
+}
+function InsertElementAnchor(href, text){
+    PrintTag('A', true, TagAttrib('HREF', URI(href)), text);
+}
+
+//-->
+</script>
+<body bgcolor="FFFFFF">
+<p>&nbsp;
+</p>
+<font face="arial, helvetica, verdana, sans serif" size="3"><b>Sorry, the BellSouth Personal Web Page
+or file you're looking for is not here.</b></font><font face="arial, helvetica, verdana, sans serif" size="2">
+</p>
+<ul>
+  <li>You may have misspelled the URL. Please check your spelling.
+  <li>The owner of this site may have chosen to delete their personal web page.
+  <li>The site may have been moved to a different URL.</li>
+  <li>If you are trying to access a url starting with <a href="http://personal.bellsouth.net/"><b>http://personal.bellsouth.net/</b></a>
+    or any variation of this, the owner of the site has not migrated their
+    site from the old BellSouth Personal Web Page server. Please contact the owner of the
+    site.</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<hr>
+<font face="arial, helvetica, verdana, sans serif" size="2">
+<table border="0" width="100%">
+  <tr>
+    <td width="33%">
+      <p align="center"><b><a href="http://home.bellsouth.net/p">Build Your own Personal web page</a></b></td>
+    <td width="33%">
+      <p align="center"><b><a href="http://home.bellsouth.net/p/s/s.dll?spage=cg/freeformpages/content_page14.htm">PWP-FTP faq</a>&nbsp;&nbsp;
+      <a href="http://bellsouthpwp.net/checklist.htm">PWP-FTP&nbsp; error checklist</a></b></td>
+    <td width="34%">
+      <p align="center"><b><a href="mailto:webmaster@bellsouth.net">Contact
+      Webmaster</a></b></td>
+  </tr>
+</table>
+</font>
+<hr>
+</body>
+</html>
