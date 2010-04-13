@@ -51,7 +51,7 @@
 \paragraph_spacing single
 \noindent
 \begin_inset Graphics
-	filename C:/Users/Eric/Documents/WPI/Academics/2009-2010/MQP/doc/image/wpiLogo.png
+	filename image/wpiLogo.png
 	lyxscale 25
 	scale 25
 
@@ -248,7 +248,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename C:/Users/Eric/Documents/WPI/Academics/2009-2010/MQP/doc/image/graphicsPipeline.PNG
+	filename image/graphicsPipeline.PNG
 	lyxscale 50
 	scale 50
 	clip
@@ -510,7 +510,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename C:/Users/Eric/Documents/WPI/Academics/2009-2010/MQP/doc/image/beagleBoard.png
+	filename image/beagleBoard.png
 	lyxscale 50
 	scale 75
 	BoundingBox 2bp 2bp 463bp 300bp
