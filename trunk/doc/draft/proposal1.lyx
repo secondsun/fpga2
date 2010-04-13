@@ -140,11 +140,152 @@ LatexCommand tableofcontents
 \end_layout
 
 \begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FloatList figure
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset FloatList table
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Itemize
+TODO
+\end_layout
+
+\begin_layout Section
+Background Research
+\end_layout
+
+\begin_layout Subsection
+Portable Graphics
+\end_layout
+
+\begin_layout Subsubsection
+Historical Context
+\end_layout
+
+\begin_layout Subsubsection
+Applications
+\end_layout
+
+\begin_layout Itemize
+Mobile Computing
+\end_layout
+
+\begin_layout Itemize
+Embedded Systems
+\end_layout
+
+\begin_layout Subsubsection
+Current ASIC Technology
+\end_layout
+
+\begin_layout Itemize
+NVIDIA Tegra
+\end_layout
+
+\begin_layout Itemize
+PowerVR SGX
+\end_layout
+
+\begin_layout Subsection
+Graphics Rendering Pipeline
+\end_layout
+
+\begin_layout Standard
+The graphics rendering pipeline traditionally refers to a generalized abstractio
+n for the process that of which modern graphics accerators employ to produce
+ visualizations.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Front End
+\end_layout
+
+\begin_layout Subsubsection
+Vertex Processor
+\end_layout
+
+\begin_layout Subsubsection
+Primitive Assembly
+\end_layout
+
+\begin_layout Subsubsection
+Rasterization and Interpolation
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Subsubsection
+Frame Buffer
+\end_layout
+
+\begin_layout Subsection
+3D Mathematics
+\end_layout
+
+\begin_layout Subsubsection
+Transformation
+\end_layout
+
+\begin_layout Subsubsection
+Fixed Point Algorithms
+\end_layout
+
+\begin_layout Subsection
+Target Platforms
+\end_layout
+
+\begin_layout Subsubsection
+Field Programmable Gate Arrays (FPGAs)
+\end_layout
+
+\begin_layout Itemize
+Overview of technology
+\end_layout
+
+\begin_layout Itemize
+Advantages and disadvantages for graphics acceleration
+\end_layout
+
+\begin_layout Subsubsection
+Spartan-6 FPGA and the SP601 Evaluation Kit
+\end_layout
+
+\begin_layout Subsubsection
+OMAP3530 and the BeagleBoard
+\end_layout
+
+\begin_layout Subsection
+Conclusions
 \end_layout
 
 \begin_layout Standard
@@ -215,11 +356,11 @@ These objectives will be completed through the design and implementation
 
 \begin_layout Standard
 \paragraph_spacing onehalf
-The first objective is for the device to be able to easily interface with
- other systems that need to display graphics.
+The first objective is for the device to be able to interface with other
+ systems that need to display graphics.
  The device should be able to be easily connected to other systems through
  a standard input/output (IO) format.
- The device should have an easy and intuitive means of communication.
+ The device should use an easy and intuitive means of communication.
 \end_layout
 
 \begin_layout Standard
@@ -227,7 +368,7 @@ The first objective is for the device to be able to easily interface with
 The second objective is the ability of the device to rasterize a two-dimensional
  (2D) image from the three dimensional (3D) data provided by another system.
  This must be highly efficient, as many images need to be genereated per
- second to produce smooth and animated visualizations.
+ second to produce smooth animated visualizations.
  Consequently, optimal algorithms need to be selected to perform these operation
 s on the target hardware.
 \end_layout
@@ -250,11 +391,11 @@ Design Requirements
 \begin_layout Standard
 \paragraph_spacing onehalf
 The design for this project includes 5 subsystems.
- These systems and their responsibilities are described below in Table 1.
-\begin_inset Newline newline
-\end_inset
-
-
+ These systems and their responsibilities are described below in 
+\series bold
+Table 1
+\series default
+.
 \end_layout
 
 \begin_layout Standard
@@ -263,7 +404,7 @@ The design for this project includes 5 subsystems.
 placement H
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -409,22 +550,30 @@ The major components of the design requirements
 \begin_layout Standard
 \paragraph_spacing onehalf
 Each subsystem has its own specific requirements.
- The input interface must provide a communation connection for graphics
- commands and data to the accelerator.
+ The 
+\shape italic
+input interface
+\shape default
+ must provide a communation connection for graphics commands and data to
+ the accelerator.
  This hardware implements the link between a host system and the the graphics
  processing unit (GPU).
  This interface must be independent of the platform used with the accelerator,
  adhering to a known and standardized IO format.
- This format must be able to transfer commands and data at a fairly high
- rate while being compatable with a reasonable amount of low-power microprocesso
-r and micocontroller systems.
- This allows for easy application with many different platforms.
+ This format must be able to transfer graphics commands and data at a fairly
+ high rate while being compatable with a reasonable amount of low-power
+ microprocessor and micocontroller systems.
+ This is intended for easy application with a multitude of mobile platforms.
 \end_layout
 
 \begin_layout Standard
 \paragraph_spacing onehalf
-The graphics processor shall render 3D primitive data to 2D space and will
- be fulfilled by the functional implementation of a GPU.
+The 
+\shape italic
+graphics processor
+\shape default
+ shall render 3D primitive data to 2D space and will be fulfilled by the
+ functional implementation of a GPU.
  The GPU must implement the 3D graphics pipeline and all of its components.
  The GPU must be able to receive encoded commands and data from the input
  interface, perform transformations on these, and rasterize the result to
@@ -438,8 +587,13 @@ The graphics processor shall render 3D primitive data to 2D space and will
 
 \begin_layout Standard
 \paragraph_spacing onehalf
-The output interface must implement a standardized display output, providing
- the interface between the GPU and a target output device.
+\noindent
+The 
+\shape italic
+output interface
+\shape default
+ must implement a standardized display output, providing the interface between
+ the GPU and a target output device.
  This interface must implement a digital video out standard ensuring that
  it could be used for multiple different displays.
  This requires a hardware implementation of the display format controller
@@ -449,19 +603,31 @@ The output interface must implement a standardized display output, providing
 \end_layout
 
 \begin_layout Standard
-The graphics API must define an abstraction layer that allows a user to
- easily send graphics commands and data from their applications.
+\paragraph_spacing onehalf
+\noindent
+The 
+\shape italic
+graphics API
+\shape default
+ must define an abstraction layer that allows a user to easily send graphics
+ commands and data to the accelerator from their applications.
  This API must be implemented in a standardized programming language and
- must follow a uniform and logical specification.
- The API must all configuration of all graphics features and settings of
- the accelerator.
+ must follow a consistent and logical specification.
+ The API must implement all configuration of all graphics features and settings
+ of the accelerator.
  The API must also provide an intuitive interface for drawing and manipulating
- graphical data through the GPU.
+ graphical data with the GPU.
 \end_layout
 
 \begin_layout Standard
-The device driver must provide the software interface between the graphics
- API and the hardware input interface.
+\paragraph_spacing onehalf
+\noindent
+The 
+\shape italic
+device driver
+\shape default
+ provides the software interface between the graphics API and the hardware
+ input interface.
  The driver must implement the defined functionality of the API by sending
  commands and data to the input interface.
  This driver must be compatable with multiple hardware systems by being
