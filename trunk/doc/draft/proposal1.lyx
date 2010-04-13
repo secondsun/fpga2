@@ -51,7 +51,7 @@
 \paragraph_spacing single
 \noindent
 \begin_inset Graphics
-	filename wpi_logo.png
+	filename C:/Users/Eric/Documents/WPI/Academics/2009-2010/MQP/doc/image/wpiLogo.png
 	lyxscale 25
 	scale 25
 
@@ -177,6 +177,13 @@ Introduction
 TODO
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Background Research
 \end_layout
@@ -244,6 +251,7 @@ status open
 	filename C:/Users/Eric/Documents/WPI/Academics/2009-2010/MQP/doc/image/graphicsPipeline.PNG
 	lyxscale 50
 	scale 50
+	clip
 
 \end_inset
 
@@ -273,6 +281,22 @@ A high level representation of the graphics pipeline used in realtime rendering
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+This figure shows all of the major components of the graphics rendering
+ pipeline for modern GPUs.
+ This pipeline typically starts at the front end, where commands and data
+ are sent from a host system.
+ The graphics data will then filter through the pipeline, while the GPU
+ performs necessary processing and transformation to produce raw displayable
+ data.
+ The graphics commands typically control the how this processing and transformat
+ion is done at the various stages.
+ The output of this system is an image updating in realtime that can be
+ drawn by a display device.
+ This section describes the high level functionality of these stages, and
+ how they interact with eachother.
 \end_layout
 
 \begin_layout Subsubsection
@@ -311,6 +335,20 @@ Transformation
 Fixed Point Algorithms
 \end_layout
 
+\begin_layout Standard
+Floating-point units (FPUs), the components of CPUs used to natively perform
+ arithmatic on floating point numbers, are often not available on FPGAs
+ and few and far between on low-power micocontrollers and microprocessors.
+ With these, floating point math may be implemented in software, or simply
+ not used at all.
+ On devices like these, reasoble computational performance can likely be
+ achieved using fixed-point arithmatic for 3D mathematics rather than a
+ software-defined FPU.
+ For functional implementaton of fixed-point 3D computations, a number of
+ steps must be followed depending on the calculation performed.
+ This section describes the necessary background for these.
+\end_layout
+
 \begin_layout Subsection
 Target Platforms
 \end_layout
@@ -328,15 +366,117 @@ Advantages and disadvantages for graphics acceleration
 \end_layout
 
 \begin_layout Subsubsection
-Spartan-6 FPGA and the SP601 Evaluation Kit
+Spartan-6 FPGA and SP601 Evaluation Kit
+\end_layout
+
+\begin_layout Itemize
+Spartan-6 features
+\end_layout
+
+\begin_layout Itemize
+SP601 Evaluation kit features
+\end_layout
+
+\begin_layout Itemize
+Why selected
 \end_layout
 
 \begin_layout Subsubsection
-OMAP3530 and the BeagleBoard
+Beagle Board
 \end_layout
 
-\begin_layout Subsection
-Conclusions
+\begin_layout Standard
+This project requires an embedded development system as a test platform
+ for use with the FPGA-based GPU implementation.
+ This test platform must meet the following requirements:
+\end_layout
+
+\begin_layout Enumerate
+The platform must be a low-cost, low-power single-board computer (SBC)
+\end_layout
+
+\begin_layout Enumerate
+The platform must be able to boot an embedded operating system (OS)
+\end_layout
+
+\begin_layout Enumerate
+The platform must be fast enough to send graphics commands and data to the
+ GPU in real-time
+\end_layout
+
+\begin_layout Enumerate
+The platform must include a graphics chipset that can also render OpenGL
+ ES 1.0 applications, for benchmarking purposes
+\end_layout
+
+\begin_layout Standard
+The platform selected to fulfill these requirements was the Beagle Board,
+ developed by Texas Instruments to demonstrate the the features of the OMAP3530
+ system-on-a-chip (SoC).
+ This SBC is both low-cost and low-power, retailing at only $149.00 USD per
+ board.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "beagle1"
+
+\end_inset
+
+ The OMAP3530 meets both the second and third requirements, incorporating
+ the ARM Cortex-A8 CPU, running at an impressive 720MHz and capable of booting
+ Windows CE, Linux, and Symbian OSs.
+ Lastly, the Beagle Board incorporates the PowerVR SGX chipset, a OpenGL
+ ES 2.0 capable 2D/3D graphics accelerator capable of rendering 10 million
+ polygons per second.
+ Meeting the fourth requirement, this GPU would allow parallel rendering
+ to benchmark the quantitative and qualitative performance of the FPGA implement
+ation.
+ Below, figure 2 shows the Beagle Board and highlights its major features.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename C:/Users/Eric/Documents/WPI/Academics/2009-2010/MQP/doc/image/beagleBoard.png
+	lyxscale 50
+	scale 75
+	BoundingBox 2bp 2bp 463bp 300bp
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+The Beagle Board and its feature set
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+
+\series bold
+(Source: http://www.beagleboard.org, 2010)
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -418,7 +558,7 @@ The first objective is for the device to be able to interface with other
 \paragraph_spacing onehalf
 The second objective is the ability of the device to rasterize a two-dimensional
  (2D) image from the three dimensional (3D) data provided by another system.
- This must be highly efficient, as many images need to be genereated per
+ This must be highly efficient, as many images need to be generated per
  second to produce smooth animated visualizations.
  Consequently, optimal algorithms need to be selected to perform these operation
 s on the target hardware.
@@ -605,15 +745,15 @@ Each subsystem has its own specific requirements.
 \shape italic
 input interface
 \shape default
- must provide a communation connection for graphics commands and data to
- the accelerator.
+ must provide a communication connection for graphics commands and data
+ to the accelerator.
  This hardware implements the link between a host system and the the graphics
  processing unit (GPU).
  This interface must be independent of the platform used with the accelerator,
  adhering to a known and standardized IO format.
  This format must be able to transfer graphics commands and data at a fairly
- high rate while being compatable with a reasonable amount of low-power
- microprocessor and micocontroller systems.
+ high rate while being compatible with a reasonable amount of low-power
+ microprocessor and microcontroller systems.
  This is intended for easy application with a multitude of mobile platforms.
 \end_layout
 
@@ -681,7 +821,7 @@ device driver
  input interface.
  The driver must implement the defined functionality of the API by sending
  commands and data to the input interface.
- This driver must be compatable with multiple hardware systems by being
+ This driver must be compatible with multiple hardware systems by being
  implemented within a standard driver model.
  
 \end_layout
