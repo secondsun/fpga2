@@ -378,24 +378,32 @@ fixed
 
 \series bold
 Addition
+\series default
+- TODO
 \end_layout
 
 \begin_layout Itemize
 
 \series bold
 Subtraction
+\series default
+- TODO
 \end_layout
 
 \begin_layout Itemize
 
 \series bold
 Multiplication
+\series default
+- TODO
 \end_layout
 
 \begin_layout Itemize
 
 \series bold
 Division
+\series default
+- TODO
 \end_layout
 
 \begin_layout Standard
@@ -433,19 +441,106 @@ Advantages and disadvantages for graphics acceleration
 \end_layout
 
 \begin_layout Subsubsection
-Spartan-6 FPGA and SP601 Evaluation Kit
+Spartan-6 FPGA and SP605 Evaluation Kit
 \end_layout
 
-\begin_layout Itemize
-Spartan-6 features
+\begin_layout Standard
+The Spartan-6 is the latest iteration of Xilinx's Spartan family of low-cost,
+ low-power FPGAs.
+ Xilinx, the leading FPGA manufacturer, has designed the Spartan 6 with
+ high performance and cost-sensitive applications in mind.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "spartan1"
+
+\end_inset
+
+ Using 45nm, 9-metal copper layer, dual-oxide process technology, the Spartan
+ 6 includes advanced power management and memory support, among other features.
+ The selected LXT model boasts 150,000 logic cells and supports integrated
+ hard memory, block RAM, high performance clocking and serial IO, and an
+ integrated PCI-Express (PCI-E) endpoint block.
+ The Spartan-6 LTX is Xilinx's ideal offering for FPGA-based graphics accelerati
+on as it balances both pricepoint and the resources necessary for GPU computatio
+ns.
+ 
 \end_layout
 
-\begin_layout Itemize
-SP601 Evaluation kit features
+\begin_layout Standard
+The SP605 Evaluation Kit enables developers to easily prototype designs
+ with the Spartan-6 LXT FPGA.
+ The kit includes all the basic components of the Xilinx Base Targeted Design
+ Platform in one package.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "spartan1"
+
+\end_inset
+
+ With the SP605, developers can easily take advantage of the features of
+ the Spartan 6.
+ Additionally, the kit includes DVI video output, a 200MHz oscillator, 128MB
+ of DDR3 memory, and various expansion connections.
+ Below, 
+\series bold
+figure 2
+\series default
+ shows the SP605 board.
 \end_layout
 
-\begin_layout Itemize
-Why selected
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename image/sp605.png
+	lyxscale 50
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Spartan-6 SP605 Evaluation Kit
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+
+\series bold
+(Source: http://www.xilinx.com/products/devkits/EK-S6-SP605-G.htm, 2010)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The support for the Spartan-6 LXT FPGA, digital video output interface,
+ and 200MHz clock all make the SP605 a great choice for FPGA-based graphics
+ acceleration.
+ Additionally, its support for PCI-E makes it ideal for potential application
+ in a desktop PC environment.
 \end_layout
 
 \begin_layout Subsubsection
@@ -497,7 +592,11 @@ key "beagle1"
  Meeting the fourth requirement, this GPU would allow parallel rendering
  to benchmark the quantitative and qualitative performance of the FPGA implement
 ation.
- Below, figure 2 shows the Beagle Board and highlights its major features.
+ Below, 
+\series bold
+figure 3
+\series default
+ shows the Beagle Board and highlights its major features.
 \end_layout
 
 \begin_layout Standard
@@ -512,7 +611,7 @@ status open
 \begin_inset Graphics
 	filename image/beagleBoard.png
 	lyxscale 50
-	scale 75
+	scale 70
 	BoundingBox 2bp 2bp 463bp 300bp
 	clip
 
