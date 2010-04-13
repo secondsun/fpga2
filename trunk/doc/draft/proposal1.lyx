@@ -219,9 +219,60 @@ Graphics Rendering Pipeline
 
 \begin_layout Standard
 The graphics rendering pipeline traditionally refers to a generalized abstractio
-n for the process that of which modern graphics accerators employ to produce
- visualizations.
- 
+n for the process that of which modern graphics processing units (GPUs)
+ employ to produce visualizations.
+ The GPU typically implements 6 stages within the pipeline, and often various
+ substages within these.
+ These 6 are: (1) the front end, (2) a vertex processing, (3) primitive
+ assembly, (4) rasterization and interpolation, (5) fragment processing,
+ and (6) frame buffer output.
+ These stages all run in parallel, however it is important to note that
+ data passes through each of them sequentially.
+ Figure 1 below shows the graphics pipeline, as implemented by OpenGL:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename C:/Users/Eric/Documents/WPI/Academics/2009-2010/MQP/doc/image/graphicsPipeline.PNG
+	lyxscale 50
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+A high level representation of the graphics pipeline used in realtime rendering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+
+\series bold
+(Source Adapted from: NVIDIA Cg User's manual, 2010)
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -229,7 +280,7 @@ Front End
 \end_layout
 
 \begin_layout Subsubsection
-Vertex Processor
+Vertex Processing
 \end_layout
 
 \begin_layout Subsubsection
@@ -240,8 +291,8 @@ Primitive Assembly
 Rasterization and Interpolation
 \end_layout
 
-\begin_layout Standard
-
+\begin_layout Subsubsection
+Fragment Processing
 \end_layout
 
 \begin_layout Subsubsection
