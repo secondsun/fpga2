@@ -332,7 +332,7 @@ Transformation
 \end_layout
 
 \begin_layout Subsubsection
-Fixed Point Algorithms
+Fixed-Point Computations
 \end_layout
 
 \begin_layout Standard
@@ -341,12 +341,79 @@ Floating-point units (FPUs), the components of CPUs used to natively perform
  and few and far between on low-power micocontrollers and microprocessors.
  With these, floating point math may be implemented in software, or simply
  not used at all.
- On devices like these, reasoble computational performance can likely be
- achieved using fixed-point arithmatic for 3D mathematics rather than a
- software-defined FPU.
- For functional implementaton of fixed-point 3D computations, a number of
- steps must be followed depending on the calculation performed.
- This section describes the necessary background for these.
+ On such devices, reasonable computational performance can likely be achieved
+ using fixed-point arithmatic for 3D mathematics rather than a software-defined
+ FPU.
+\end_layout
+
+\begin_layout Standard
+With fixed-point arithmatic, the decimal point of a number is 
+\begin_inset Quotes eld
+\end_inset
+
+fixed
+\begin_inset Quotes erd
+\end_inset
+
+ before a specific digit.
+ For example, during integer math, the decimal is placed after the least
+ signicant bit (LSB), meaning that there is no memory allocated for a possible
+ fraction.
+ In this scenerio, the fraction is discarded and the result of a computation
+ is rounded to simply whole numbers.
+ However, it is possible to fix the decimal point at a different position
+ within the number.
+ This allows for fractions to be represented, even if they are still just
+ rounded approximations.
+ With this form of number representation, math can be done by a tradional
+ arithmatic logic unit (ALU), and 3D vectors can be approximated enough
+ to render still realistic visualizations.
+ This incorporates simple integer math, along with some additional steps
+ to account for the decimal point position.
+ Below describes these additional steps that must be taken depending on
+ the operation performed: 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Addition
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Subtraction
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Multiplication
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Division
+\end_layout
+
+\begin_layout Standard
+For the application of 3D mathematics, it is often not ideal to represent
+ fixed numbers with equal allocation for both whole numbers and and fractions.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pendleton"
+
+\end_inset
+
+This is due to the need to often include a signed most significant bit (MSB),
+ which constrains the integer component of the number.
+ Intead, a format such as 18.14 or 17.15 (in the format M.N, where M represents
+ the integer component in bits and N represents the fractional component
+ in bits) is often much more usable for 32-bit 3D fixed-point math.
+ For 16-bit math, the format 10.6 is ideal to allow for a substantial enough
+ integer component.
 \end_layout
 
 \begin_layout Subsection
