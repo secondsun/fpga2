@@ -196,6 +196,10 @@ Portable Graphics
 Historical Context
 \end_layout
 
+\begin_layout Standard
+TODO
+\end_layout
+
 \begin_layout Subsubsection
 Applications
 \end_layout
@@ -218,6 +222,14 @@ NVIDIA Tegra
 
 \begin_layout Itemize
 PowerVR SGX
+\end_layout
+
+\begin_layout Subsubsection
+OpenGL ES
+\end_layout
+
+\begin_layout Standard
+TODO
 \end_layout
 
 \begin_layout Subsection
@@ -303,24 +315,168 @@ ion is done at the various stages.
 Front End
 \end_layout
 
+\begin_layout Standard
+TODO
+\end_layout
+
 \begin_layout Subsubsection
 Vertex Processing
+\end_layout
+
+\begin_layout Standard
+TODO
 \end_layout
 
 \begin_layout Subsubsection
 Primitive Assembly
 \end_layout
 
+\begin_layout Standard
+TODO
+\end_layout
+
 \begin_layout Subsubsection
 Rasterization and Interpolation
+\end_layout
+
+\begin_layout Standard
+TODO
 \end_layout
 
 \begin_layout Subsubsection
 Fragment Processing
 \end_layout
 
+\begin_layout Standard
+TODO
+\end_layout
+
 \begin_layout Subsubsection
 Frame Buffer
+\end_layout
+
+\begin_layout Standard
+After the GPU has produced a synthesized image, and performed necessary
+ pixel transformation on it, the pixels are stored in an image buffer -
+ the 
+\shape italic
+frame buffer
+\shape default
+.
+ As its name suggests, the frame buffer stores the current 
+\begin_inset Quotes eld
+\end_inset
+
+frame
+\begin_inset Quotes erd
+\end_inset
+
+ to be rendered, in reference to an animation sequence.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "theoharis"
+
+\end_inset
+
+ This intermediate storage between the graphics pipeline and the output
+ display is necessary because the two are not synchronized with eachother.
+ Displays are typically clocked, which dependent on both the display resolution
+ and refresh rate.
+ Display updates are synchronous processes, performing continuously and
+ sequentially by a constant clock signal.
+ The GPU, on the other hand, produces data asynchronously and randomly,
+ which is dependent on when the CPU sends it data or commands.
+\end_layout
+
+\begin_layout Standard
+The frame buffer for a graphics accelerator is generally either preallocated
+ in a systems main memory, or in a dedicated memory device onboard the graphics
+ accelerator.
+ Specifically, with realtime graphics systems, the frame buffer is where
+ all pixel color data from rasterization is stored before being drawn to
+ the display.
+ Furthermore, this is necessary because rasterization is performed on primitives
+ and there is no guarantee that the rasterized primitives are actually drawn
+ to the output.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "theoharis"
+
+\end_inset
+
+ For simplicity and efficiency, pixel color data within the framebuffer
+ is typically encoded in a format most compatible with the input signals
+ of the display device.
+\end_layout
+
+\begin_layout Standard
+Unfortunately, due to the conclict between GPU's random access to the frame
+ buffer and the display device's sequential access, many issues arrise.
+ Primarily, it is very likely that the display device will begin reading
+ a 
+\shape italic
+scanline
+\shape default
+, the a horizontal pixel line traced by a display's rasterbeam, before the
+ GPU has finished drawing it.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "theoharis"
+
+\end_inset
+
+ An ideal solution to this problem would be for the output circuit of the
+ graphics accelerator to wait for the rendering of a frame to be completed
+ before starting to read the frame buffer.
+ However, this is not possible, as the output image must be updated at a
+ very specific rate that is independent of rasterization time.
+\end_layout
+
+\begin_layout Standard
+The solution to this problem is to introduce 
+\shape italic
+double buffering
+\shape default
+, the use of two frame buffers by the GPU.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "theoharis"
+
+\end_inset
+
+ The first frame buffer, the back buffer, is used for writing only from
+ the rasterizer, and can as such be written to randomly.
+ The second framebuffer, the front buffer, is used only for reading from
+ the output circuit, and can as such be read sequentially without respect
+ to the time of which data is written.
+ When the current frame is finished rendering to the back buffer, the two
+ buffers then switch roles, and the next frame is drawn.
+ This will prevent the buffer that is currently being drawn from ever being
+ directly written to.
+\end_layout
+
+\begin_layout Standard
+However, basic double buffering still may not correct all possible frame
+ buffer related artifacts.
+ The most common of these, 
+\shape italic
+tearing
+\shape default
+, occurs when the buffers swap before the sequential reading of the front
+ buffer has not completed an entire frame.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "theoharis"
+
+\end_inset
+
+ This results in the lower portion of the display being a frame ahead from
+ the upper portion.
+ Tearing can be avoided by only buffer swapping in the refresh interval,
+ the vertical blank count (VBLANK), between the previous and next frames.
+ Swapping during the VBLANK period will, however, introduce a lag.
+ On many modern graphics accelerators, this is a setting that can be disabled
+ in order to maximize speed.
 \end_layout
 
 \begin_layout Subsection
@@ -329,6 +485,14 @@ Frame Buffer
 
 \begin_layout Subsubsection
 Transformation
+\end_layout
+
+\begin_layout Itemize
+Model space -> scaling, rotation, translation
+\end_layout
+
+\begin_layout Itemize
+View space -> perspective, orthogonal
 \end_layout
 
 \begin_layout Subsubsection
