@@ -47,8 +47,23 @@
 
 \begin_body
 
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pagenumbering{roman}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Title
-\paragraph_spacing single
 \noindent
 \begin_inset Graphics
 	filename image/wpiLogo.png
@@ -131,6 +146,22 @@ Co-Advisor
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{section}{Table of Contents}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset CommandInset toc
 LatexCommand tableofcontents
 
@@ -147,7 +178,39 @@ LatexCommand tableofcontents
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{section}{List of Figures}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset FloatList figure
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{section}{List of Tables}
+\end_layout
 
 \end_inset
 
@@ -164,6 +227,22 @@ LatexCommand tableofcontents
 
 \begin_layout Standard
 \begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pagenumbering{arabic}
+\end_layout
+
 \end_inset
 
 
@@ -332,6 +411,13 @@ Primitive Assembly
 \end_layout
 
 \begin_layout Standard
+A primitive is one or more vertices making up a point, line, or poly This
+ stage takes transformed vertices from modelview transformations during
+ vertex processing stage to produce primitives Primitives are then clipped
+ to fit just within the viewport or view volume.
+\end_layout
+
+\begin_layout Standard
 TODO
 \end_layout
 
@@ -340,7 +426,90 @@ Rasterization and Interpolation
 \end_layout
 
 \begin_layout Standard
-TODO
+In computer graphics, a raster image is a 2D array of discrete pixels that
+ represent intensity samples.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "theoharis"
+
+\end_inset
+
+ As such, 
+\shape italic
+rasterization
+\shape default
+ is the stage within the graphics rendering pipeline where a 2D image is
+ generated from transformed primitive data.
+ More formally, rasterization is defined as converting a line drawing, mathemati
+cal expression in space, or a 3D scene into intensity values into an image
+ buffer, and then propagating them to an output device.
+ Within rasterization, 
+\shape italic
+interpolation
+\shape default
+ is the process of constructing new data points - in the form of color intensity
+ values - within the discrete range connecting two vertexes.
+ With computer graphics, interpolation is necessary for generating vertex
+ colors and fog, among other things.
+ 
+\end_layout
+
+\begin_layout Standard
+When creating a rasterizer, there are two main challenges that designers
+ are often faced with: (1) To determine the pixel(s) that accurately describe
+ the current primitive being rendered, and (2) to be efficient.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "theoharis"
+
+\end_inset
+
+ Furthermore, rasterization includes the process of 
+\shape italic
+clipping
+\shape default
+, which eliminates primitives that do not need to be rendered to the display
+ device.
+ These bounds are typically referred to as the 
+\shape italic
+culling object
+\shape default
+.
+ Lastly, within the rasterization stage, the 
+\shape italic
+Z-buffer
+\shape default
+ (depth buffer) is generated, which stores the depth values for rasterized
+ pixels.
+ For this project, rasterization of primitives is limited to simply points,
+ lines, and triangles.
+ This section describes ideal fixed-point alrgorithms for rasterizing these,
+ as well as proper methods of clipping and Z-buffer generation.
+ 
+\end_layout
+
+\begin_layout Standard
+TODO:
+\end_layout
+
+\begin_layout Itemize
+Point rasterization algorithm
+\end_layout
+
+\begin_layout Itemize
+Line rasterization algorithm
+\end_layout
+
+\begin_layout Itemize
+Triangle rasterization algorithm
+\end_layout
+
+\begin_layout Itemize
+Clipping algorithm(s)
+\end_layout
+
+\begin_layout Itemize
+Z-Buffer
 \end_layout
 
 \begin_layout Subsubsection
