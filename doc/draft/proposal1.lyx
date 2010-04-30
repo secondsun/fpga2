@@ -986,7 +986,7 @@ The Beagle Board and its feature set
 \end_layout
 
 \begin_layout Section
-Project Overview
+Project Overview and Design
 \end_layout
 
 \begin_layout Standard
@@ -1049,7 +1049,7 @@ These objectives will be completed through the design and implementation
 The first objective is for the device to be able to interface with other
  systems that need to display graphics.
  The device should be able to be easily connected to other systems through
- a standard input/output (IO) format.
+ a standard input/output (I/O) format.
  The device should use an easy and intuitive means of communication.
 \end_layout
 
@@ -1249,7 +1249,7 @@ input interface
  This hardware implements the link between a host system and the the graphics
  processing unit (GPU).
  This interface must be independent of the platform used with the accelerator,
- adhering to a known and standardized IO format.
+ adhering to a known and standardized I/O format.
  This format must be able to transfer graphics commands and data at a fairly
  high rate while being compatible with a reasonable amount of low-power
  microprocessor and microcontroller systems.
@@ -1325,37 +1325,30 @@ device driver
  
 \end_layout
 
-\begin_layout Standard
-\begin_inset Newpage pagebreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-Project Design
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
 \begin_layout Subsection
-System Overview
+Design
 \end_layout
 
 \begin_layout Standard
-The graphics accelerator implements a number of subsystems to control the
- various stages of the graphics pipleline and its necessary input and output
- interfaces.
- Figure 4 below provides an overall system diagram for the hardware design.
- The 4 subsystems of this design are (1) the graphics processing unit, (2)
- the vertex and transformation unit, (3) the rasterizer and (4) the video
- interface.
- These systems perform the necessary steps to draw 3D graphics to an output
- display device from an input command stream, provided by a microcontroller
- or a microprocesser system.
- The functionality of each of these is described below.
+This section describes the overall system design for the project, implementing
+ the requirements previously discussed.
+ The core of the system, the graphics processor and all of its necessary
+ subsystems, will be implemented within the Spartan-6 LXT FPGA on the SP605
+ Development Board.
+ 
+\end_layout
+
+\begin_layout Standard
+To render 3D visualizations, data will flow first from the application,
+ then to the graphics API and driver, and then to the FPGA.
+ The FPGA will perform all necessary processing to rasterize the 3D visualizatio
+ns to a framebuffer located in memory.
+ The selected device to hold video memory is the 128MB DDR3 component memory,
+ located on the SP605.
+ Next, data from the framebuffer will be synchronously sent to the display
+ device, using the SP605's Digital Video Interface (DVI) control circuitry.
+ Figure 4 below provides a simple overall system diagram of the graphic
+ hardware and its input and output interfaces.
 \end_layout
 
 \begin_layout Standard
@@ -1369,9 +1362,9 @@ status open
 \align center
 \begin_inset Graphics
 	filename image/systemDiagram.png
-	lyxscale 70
-	scale 65
-	BoundingBox 5bp 5bp 765bp 660bp
+	lyxscale 75
+	scale 55
+	BoundingBox 3bp 3bp 645bp 522bp
 	clip
 
 \end_inset
@@ -1391,7 +1384,150 @@ System overview
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Software Design Overview
+\end_layout
+
+\begin_layout Standard
+The software design for this project implements all of the necessary abstraction
+s for an application programmer to be able to draw 3D data with the graphics
+ accelerator.
+ This consists of two primary subsystems, (1) the graphics API and (2) the
+ driver.
+ Additionally, the software designs for this project include various test
+ modules whose purpose is to qualitatively and quantitatively benchmark
+ the FPGA-based graphics accelerator against similiar performing ASIC-based
+ graphics devices.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Graphics API
+\end_layout
+
+\begin_layout Standard
+The graphics API is the software interface to the graphic hardware, allowing
+ three-dimensional visualizations to be drawn for an application by envoking
+ a logical and standardized set of functions.
+ To be streamlined and hardware independent, the choice was made to implement
+ OpenGL ES 1.0 as the graphics API, rather than designing a custom software
+ interface.
+ However, due to the limited scope of this project, only those functions
+ that can be defined within the constraints of the graphics hardware features
+ will be implemented.
+ The remaining functions will be implemented as 
+\begin_inset Quotes eld
+\end_inset
+
+stubs
+\begin_inset Quotes erd
+\end_inset
+
+, allowing possible future expandability and for OpenGL ES applications
+ to be compiled.
+\end_layout
+
+\begin_layout Paragraph*
+Driver
+\end_layout
+
+\begin_layout Standard
+The driver will perform all communication between the application (or operating
+ system) and the graphics hardware.
+ The driver will either run in (A) userspace or (B) kernel space, dependent
+ on the chosen I/O format.
+ Presently, potentially feasible I/O formats are being explored, including:
+ General Purpose I/O (GPIO), Serial Peripheral Interface (SPI), PCI-Express,
+ and Universal Serial Bus (USB).
+ If implemented in kernel space, the driver will follow a known driver model
+ (Linux or Windows).
+ If implemented in userspace, the driver may potentially be implemented
+ as a linked library to be included with an application utilizing the graphics
+ hardware.
+ This decision will be made once a final input interface platform is decided
+ upon.
+\end_layout
+
+\begin_layout Paragraph*
+Test Modules
+\end_layout
+
+\begin_layout Standard
+The series of test modules will be written in order to qualitatively and
+ quantitatively benchmark the graphics hardware.
+ These will be written as 3D demos, and perform the following:
+\end_layout
+
+\begin_layout Itemize
+Identify the maximum performance limitations of the graphics hardware, and
+ produce reports on these (triangles-per-second, etc.)
+\end_layout
+
+\begin_layout Itemize
+Implement tests to demonstrate and validate each individual feature of the
+ graphics hardware
+\end_layout
+
+\begin_layout Itemize
+Create a final, presentable, 3D visualization that takes full advantage
+ of the graphics hardware to produce an animated scene, demonstrating all
+ of the capabilities of the system
+\end_layout
+
+\begin_layout Subsubsection
+RTL Design Overview
+\end_layout
+
+\begin_layout Standard
+The RTL design for the graphics accelerator implements a number of subsystems
+ to control the various stages of the graphics pipleline and its necessary
+ input and output interfaces.
+ 
+\series bold
+Figure 5
+\series default
+ below provides a system diagram for the RTL hardware design of the project.
+ This system performs the necessary steps to render 3D graphics to an output
+ display device from an input command stream, provided by the host controller,
+ a microcontroller or a microprocesser system.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
 \begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename image/rtl_overview.png
+	lyxscale 70
+	scale 60
+	BoundingBox 5bp 5bp 765bp 660bp
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+RTL design overview
+\end_layout
+
+\end_inset
+
 
 \end_layout
 
@@ -1401,9 +1537,9 @@ System overview
 \end_layout
 
 \begin_layout Standard
-To control the entire graphics accelerator, commands must first be pushed
- into the GP FIFO by the device driver running on the host system, followed
- directly by their relevant data.
+To control the graphics accelerator, commands must first be pushed into
+ the GPU by the device driver running on the host system, followed directly
+ by any relevant data.
  The GPU then disperses the commands and data to the necessary subsystems,
  specifically the 
 \shape italic
@@ -1414,12 +1550,15 @@ Vertex and Transformation Unit
 Rasterizer
 \shape default
  (RAS).
- These two units run in parellel, albeit sequentially on data.
- Transformed and rasterized data is then read sequentially by the Video
- Interface (VI), which runs independently of the other subsystems, constantly
- refreshing the output display device signals.
- Below shows an example program execution for a program that draws simple
- 3D primitives with the proposed implemention.
+ These two units run in parallel, albeit sequentially on data.
+ Transformed and rasterized data are then read sequentially by the 
+\shape italic
+Video Interface
+\shape default
+ (VI), which runs independently of the other subsystems, constantly refreshing
+ the output display device signals.
+ Below shows an example execution for a program that draws simple 3D primitives
+ with the proposed implemention.
 \end_layout
 
 \begin_layout Enumerate
@@ -1446,7 +1585,7 @@ Draw primitives
 
 \begin_deeper
 \begin_layout Enumerate
-Translate, scale, and rotate matrices
+Translate, scale, and rotate the modelview matrix
 \end_layout
 
 \begin_layout Enumerate
@@ -1455,29 +1594,29 @@ Send vertex position and color data
 
 \end_deeper
 \begin_layout Enumerate
-Wait for VBLANK period
+Wait for vertical synchronization
 \end_layout
 
 \begin_layout Enumerate
 Repeat steps 2 and 3
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Graphics Processing Unit
 \end_layout
 
 \begin_layout Standard
-The graphics processing unit (GPU) processes the stream of data and commands
- (instructions) sent to the graphics accelerator.
+The GPU processes the stream of data and commands (instructions) sent to
+ the graphics accelerator.
  Acting as the frontend for the entire system, the GPU implements the various
  instructions needed to control the states of the remaining subsystems and
  draw primitive data.
  These instructions are queued into the GPU by a First-In First-Out (FIFO)
- buffer, and decoded and executed by the GPU.
- Consequently, the graphics processor (GP) FIFO stores the sequence of instructi
-ons to be executed, as well as the necessary data these commands provide
- to the graphics accelerator.
- The GP instruction set that defines all control over the graphics accelerator
+ buffer, and decoded and executed sequentially by the GPU.
+ Consequently, the FIFO stores the sequence of instructions to be executed,
+ as well as the necessary data these commands provide to the graphics accelerato
+r.
+ The GPU instruction set that defines all control over the graphics accelerator
  is presented below.
  
 \end_layout
@@ -1486,9 +1625,8 @@ ons to be executed, as well as the necessary data these commands provide
 \paragraph_spacing single
 \noindent
 \begin_inset Tabular
-<lyxtabular version="3" rows="29" columns="4">
+<lyxtabular version="3" rows="27" columns="3">
 <features>
-<column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
@@ -1529,18 +1667,6 @@ Description
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-\series bold
-Size
-\end_layout
-
-\end_inset
-</cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" usebox="none">
@@ -1572,17 +1698,6 @@ NOP
 
 \family typewriter
 No operation
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-1
 \end_layout
 
 \end_inset
@@ -1622,17 +1737,6 @@ Set GPU control register
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-3
-\end_layout
-
-\end_inset
-</cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" usebox="none">
@@ -1668,13 +1772,177 @@ Set GPU status register
 
 \end_inset
 </cell>
+</row>
+<row>
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 
 \family typewriter
-3
+03h
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+DRAWDONE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Denotes the end of a frame being drawn (swaps buffers)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+04h
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+VIEWPORT
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Sets the viewport
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+05h
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+CLEAR_COLOR
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Sets the clear color
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+06h
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+CLEAR_DEPTH
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Sets the clear depth
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+07h
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+PIXEL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Draws a pixel directly to the framebuffer
 \end_layout
 
 \end_inset
@@ -1714,17 +1982,6 @@ Set the current matrix mode
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-3
-\end_layout
-
-\end_inset
-</cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" usebox="none">
@@ -1756,17 +2013,6 @@ MTX_PUSH
 
 \family typewriter
 Push current matrix onto the stack
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-1
 \end_layout
 
 \end_inset
@@ -1806,17 +2052,6 @@ Pop current matrix from the stack
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-2
-\end_layout
-
-\end_inset
-</cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" usebox="none">
@@ -1848,17 +2083,6 @@ MTX_STORE
 
 \family typewriter
 Store current matrix on the stack
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-2
 \end_layout
 
 \end_inset
@@ -1898,17 +2122,6 @@ Load current matrix from the stack
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-2
-\end_layout
-
-\end_inset
-</cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" usebox="none">
@@ -1940,17 +2153,6 @@ MTX_LOAD_I
 
 \family typewriter
 Load current matrix with the identity matrix
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-1
 \end_layout
 
 \end_inset
@@ -1990,17 +2192,6 @@ Load a 4x4 matrix to the current matrix
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-33
-\end_layout
-
-\end_inset
-</cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" usebox="none">
@@ -2010,52 +2201,6 @@ Load a 4x4 matrix to the current matrix
 
 \family typewriter
 17h
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-MTX_LOAD_4x3
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-Load a 4x3 matrix to the current matrix
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-25
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-18h
 \end_layout
 
 \end_inset
@@ -2082,17 +2227,6 @@ Multiply current matrix by a 4x4 matrix
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-33
-\end_layout
-
-\end_inset
-</cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" usebox="none">
@@ -2101,99 +2235,7 @@ Multiply current matrix by a 4x4 matrix
 \begin_layout Plain Layout
 
 \family typewriter
-19h
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-MTX_MULT_4x3
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-Multiply current matrix by a 4x3 matrix
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-25
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-1Ah
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-MTX_MULT_3x3
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-Multiply current matrix by a 3x3 matrix
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-19
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-1Bh
+18h
 \end_layout
 
 \end_inset
@@ -2220,17 +2262,6 @@ Multiply current matrix by a scale matrix
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-7
-\end_layout
-
-\end_inset
-</cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" usebox="none">
@@ -2239,7 +2270,7 @@ Multiply current matrix by a scale matrix
 \begin_layout Plain Layout
 
 \family typewriter
-1Ch
+19h
 \end_layout
 
 \end_inset
@@ -2262,17 +2293,6 @@ MTX_TRANS
 
 \family typewriter
 Multiply current matrix by a translation matrix
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-7
 \end_layout
 
 \end_inset
@@ -2312,17 +2332,6 @@ Begin a vertex list
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-1
-\end_layout
-
-\end_inset
-</cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" usebox="none">
@@ -2354,17 +2363,6 @@ VTX_END
 
 \family typewriter
 End a vertex list
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-1
 \end_layout
 
 \end_inset
@@ -2404,17 +2402,6 @@ Set the attributes of the next vertex list
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-3
-\end_layout
-
-\end_inset
-</cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" usebox="none">
@@ -2446,17 +2433,6 @@ VTX_POS_U16
 
 \family typewriter
 Set XYZ vertex coordinates, unsigned 16-bit
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-7
 \end_layout
 
 \end_inset
@@ -2496,17 +2472,6 @@ Set XYZ vertex coordinates, signed 16-bit
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-7
-\end_layout
-
-\end_inset
-</cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" usebox="none">
@@ -2542,17 +2507,6 @@ Set XYZ vertex coordinates, relative to the last vertex
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-7
-\end_layout
-
-\end_inset
-</cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" usebox="none">
@@ -2572,7 +2526,7 @@ Set XYZ vertex coordinates, relative to the last vertex
 \begin_layout Plain Layout
 
 \family typewriter
-VTX_COL_565
+VTX_COL_5551
 \end_layout
 
 \end_inset
@@ -2583,18 +2537,7 @@ VTX_COL_565
 \begin_layout Plain Layout
 
 \family typewriter
-Set RGB vertex color, 565 mode (16-bit)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-3
+Set RGBA vertex color, 5551 mode (16-bit)
 \end_layout
 
 \end_inset
@@ -2606,8 +2549,6 @@ Set RGB vertex color, 565 mode (16-bit)
 
 \begin_layout Plain Layout
 
-\family typewriter
-27h
 \end_layout
 
 \end_inset
@@ -2617,8 +2558,6 @@ Set RGB vertex color, 565 mode (16-bit)
 
 \begin_layout Plain Layout
 
-\family typewriter
-VTX_COL_4444
 \end_layout
 
 \end_inset
@@ -2628,203 +2567,6 @@ VTX_COL_4444
 
 \begin_layout Plain Layout
 
-\family typewriter
-Set RGBA vertex color, 4444 mode (16-bit)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-3
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-30h
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-DRAWDONE
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-Denotes the end of a frame being drawn (swaps buffers)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-1
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-31h
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-VIEWPORT
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-Sets the viewport
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-9
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-32h
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-CLEAR_COLOR
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-Sets the clear color
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-3
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-33h
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-CLEAR_DEPTH
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-Sets the clear depth
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family typewriter
-3
 \end_layout
 
 \end_inset
@@ -2839,69 +2581,160 @@ Sets the clear depth
 
 \begin_layout Standard
 For the graphics accelerator to process a command, the opcode must first
- be sent to the CP FIFO, followed by its necessary fields.
- The first of these instructions, NOP, is used to idle the GPU for a clock
- cycle.
- The decoding for this instruction can be seen below in table 3.
+ be sent to the FIFO, followed by its necessary fields.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Vertex and Transformation Unit
 \end_layout
 
 \begin_layout Standard
-\begin_inset Float table
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset Tabular
-<lyxtabular version="3" rows="2" columns="1">
-<features>
-<column alignment="left" valignment="top" width="0">
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-8-bits
+The Vertex and Transformation Unit defines two primary subsystems, (1) the
+ Matrix Processor (MP), and (2) the Geometry Processor (GP).
+ All VTX and MTX commands decoded by the GPU are processed by the VTU.
+ 
 \end_layout
 
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-opcode
+\begin_layout Standard
+The Matrix Processor implements all matrix commands, as well as the two
+ matrix stacks (modelview and projection), and stores the corresponding
+ current matrices.
+ The matrix stacks are stored in video RAM (VRAM) and each contain space
+ for up to 256 stored matrices.
+ Consequently, the stack is addressed by an 8-bit stack pointer.
+ The MP implements all of its matrix transformations by multiplying the
+ current matrix by another matrix, which can be defined for translation,
+ scaling, rotation, or orthogonal and perspective projection.
+ All matrices are 4x4 32-bit fixed point, with the fractional part in the
+ lower 12 bits (signed 20.12 format).
 \end_layout
 
-\end_inset
-</cell>
-</row>
-</lyxtabular>
-
-\end_inset
-
-
+\begin_layout Standard
+The Geometry Processor performs all of the necessary routines to prepare
+ incoming vertice streams to be rasterized to the frame buffer.
+ Upon receiving a VTX_BEGIN command, the GP begins processing a vertex list
+ of the specified primitive type (points, lines, or triangles).
+ To do this, the VTU envokes the following sequence of events:
 \end_layout
 
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-NOP (no operation) command format
+\begin_layout Enumerate
+Upon receiving the VTX_BEGIN command, the VTU enters geometry processing
+ mode, and cannot receive any non-VTX commands until completion.
 \end_layout
 
-\end_inset
-
-
+\begin_layout Enumerate
+The VTU then receives the VTX_ATTRIB command (or otherwise uses data from
+ the most recently received VTX_ATTRIB) to specify how the primitives are
+ to be processed.
 \end_layout
 
-\end_inset
+\begin_layout Enumerate
+The VTU then receives a VTX_POS command for the specified X, Y, and Z vertices
+ of a primitive, and executes the following:
+\end_layout
 
+\begin_deeper
+\begin_layout Enumerate
+Transform the X, Y, and Z vertices of the primitive by the modelview matrix
+ (using the matrix multiplier)
+\end_layout
 
+\begin_layout Enumerate
+Transform the X, Y, and Z vertices of the primitive by the projection matrix
+ (using the matrix multiplier)
+\end_layout
+
+\begin_layout Enumerate
+Write the resulting 2D primitive X and Y values to vertex bank 0 (VBANK0)
+ in VRAM if it is within the bounds of the framebuffer.
+\end_layout
+
+\begin_layout Enumerate
+Write the Z distance from the current view to VBANK0.
+\end_layout
+
+\begin_layout Enumerate
+Write the vertex color from the corresponding VTX_COL command immediately
+ after the transformed X, Y, and Z values.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+The VTU then repeats step 3 for the remaining vertices that have been sent.
+\end_layout
+
+\begin_layout Enumerate
+The VTU then exits geometry processing mode upon receiving the VTX_END command.
+\end_layout
+
+\begin_layout Standard
+At the completion of all drawing, the VTU will wait for being signaled that
+ drawing of the current frame is completed with the DRAWDONE command.
+ At this time, VBANK0 and VBANK1 will be swap addresses, indicating that
+ the data in VBANK1 is ready to be rasterized.
+ The data in the new VBANK0 are then cleared before new writes from the
+ GP occur.
+\end_layout
+
+\begin_layout Paragraph
+Rasterizer
+\end_layout
+
+\begin_layout Standard
+The Rasterizer's main purpose is to perform all of the drawing to the framebuffe
+r.
+ The RAS performs this in two steps, (1) primitive rasterization, the process
+ of computing the necessary pixels to be written to approximate points,
+ lines, and triangles, and (2) color rasterization, the process of deteriming
+ the necessary pixel color via interpolation.
+ The rasterizer reads data from VBANK1 upon being signaled by the DRAWDONE
+ command from the GPU.
+ At this time, the RAS rasterizes all vertices in VBANK1 to the framebuffer,
+ envoking the necessary rastization algorithm depending on the current primitive
+ type.
+ 
+\end_layout
+
+\begin_layout Standard
+Before pixels are actually written to the framebuffer, the RAS compares
+ the Z-distance from the view of the current vertex (stored in VBANK1) to
+ the Z-value of the current pixel being drawn in the Z-buffer (stored in
+ VRAM).
+ If the pixel to be drawn is further away from the current view than the
+ value in the Z-buffer, then it is not drawn to the framebuffer.
+ If it is closer, than it is drawn, and the value in the Z-buffer is overwritten
+ with the new Z value.
+ This implements simple depth-sorting.
+ The Z-buffer is then cleared at the end of the frame.
+ 
+\end_layout
+
+\begin_layout Standard
+Upon completion of rasterization, the rasterizer then waits until the Video
+ Interface enters the vertical blanking period, the time between two frames
+ are being drawn to the display device.
+ During this window, framebuffers 0 and 1 swap addresses, and the new framebuffe
+r 0 is subsequently cleared.
+ The Rasterizer then waits for the next DRAWDONE to begin rasterizing the
+ next frame to this buffer.
+\end_layout
+
+\begin_layout Paragraph*
+Video Interface
+\end_layout
+
+\begin_layout Standard
+The Video Interface provides all of the necessary interfacing to the output
+ display device.
+ This primarily includes, (1) timing synchronization of the whole system
+ with the display rate, and (2) sequential generation of the RGB signals
+ to the output display device from framebuffer 1.
+ The VI operations completely independent of the entire system on its own
+ 60 frames-per-second (FPS) clock, constantly outputting the data from framebuff
+er 1 synchronously with the vertical and horizontal timing signals.
+ The VI feeds back a single active-high control signal to the GPU, indicating
+ when it is in the VBLANK phase, for synchronization purposes.
 \end_layout
 
 \begin_layout Standard
