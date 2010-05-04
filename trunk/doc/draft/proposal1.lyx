@@ -411,10 +411,10 @@ Primitive Assembly
 \end_layout
 
 \begin_layout Standard
-A primitive is one or more vertices making up a point, line, or poly This
- stage takes transformed vertices from modelview transformations during
- vertex processing stage to produce primitives Primitives are then clipped
- to fit just within the viewport or view volume.
+A primitive is one or more vertices making up a point, line, or polygon.
+ This stage takes transformed vertices from modelview transformations during
+ vertex processing stage to produce primitives.
+ Primitives are then clipped to fit just within the viewport or view volume.
 \end_layout
 
 \begin_layout Standard
@@ -483,8 +483,9 @@ Z-buffer
  pixels.
  For this project, rasterization of primitives is limited to simply points,
  lines, and triangles.
- This section describes ideal fixed-point alrgorithms for rasterizing these,
- as well as proper methods of clipping and Z-buffer generation.
+ This section describes ideal algorithms using fixed-point mathematics for
+ rasterizing these, as well as proper methods of clipping and Z-buffer generatio
+n.
  
 \end_layout
 
@@ -657,11 +658,11 @@ Transformation
 \end_layout
 
 \begin_layout Itemize
-Model space -> scaling, rotation, translation
+Model space: affine transformations such as scaling, rotation and translation
 \end_layout
 
 \begin_layout Itemize
-View space -> perspective, orthogonal
+View space: projection modes such as perspective and orthogonal
 \end_layout
 
 \begin_layout Subsubsection
@@ -698,13 +699,13 @@ fixed
  within the number.
  This allows for fractions to be represented, even if they are still just
  rounded approximations.
- With this form of number representation, math can be done by a tradional
- arithmatic logic unit (ALU), and 3D vectors can be approximated enough
- to render still realistic visualizations.
+ With this form of number representation, math can be done by a traditional
+ arithmatic logic unit (ALU) and 3D vectors may still be approximated enough
+ to render realistic visualizations.
  This incorporates simple integer math, along with some additional steps
  to account for the decimal point position.
- Below describes these additional steps that must be taken depending on
- the operation performed: 
+ Depending on the operation performed, the following additional steps must
+ be taken: 
 \end_layout
 
 \begin_layout Itemize
@@ -740,17 +741,17 @@ Division
 \end_layout
 
 \begin_layout Standard
-For the application of 3D mathematics, it is often not ideal to represent
- fixed numbers with equal allocation for both whole numbers and and fractions.
+For the application of 3D mathematics, it is seldom ideal to represent fixed
+ numbers with equal allocation for both whole numbers and fractions.
 \begin_inset CommandInset citation
 LatexCommand cite
 key "pendleton"
 
 \end_inset
 
-This is due to the need to often include a signed most significant bit (MSB),
+This is due to the frequent need for a signed most significant bit (MSB),
  which constrains the integer component of the number.
- Intead, a format such as 18.14 or 17.15 (in the format M.N, where M represents
+ Instead, a format such as 18.14 or 17.15 (in the format M.N, where M represents
  the integer component in bits and N represents the fractional component
  in bits) is often much more usable for 32-bit 3D fixed-point math.
  For 16-bit math, the format 10.6 is ideal to allow for a substantial enough
@@ -790,7 +791,7 @@ key "spartan1"
 
  Using 45nm, 9-metal copper layer, dual-oxide process technology, the Spartan
  6 includes advanced power management and memory support, among other features.
- The selected LXT model boasts 150,000 logic cells and supports integrated
+ The selected LXT model includes 150,000 logic cells and supports integrated
  hard memory, block RAM, high performance clocking and serial IO, and an
  integrated PCI-Express (PCI-E) endpoint block.
  The Spartan-6 LTX is Xilinx's ideal offering for FPGA-based graphics accelerati
@@ -815,9 +816,9 @@ key "spartan1"
  the Spartan 6.
  Additionally, the kit includes DVI video output, a 200MHz oscillator, 128MB
  of DDR3 memory, and various expansion connections.
- Below, 
+ 
 \series bold
-figure 2
+Figure 2
 \series default
  shows the SP605 board.
 \end_layout
@@ -918,16 +919,16 @@ key "beagle1"
 
  The OMAP3530 meets both the second and third requirements, incorporating
  the ARM Cortex-A8 CPU, running at an impressive 720MHz and capable of booting
- Windows CE, Linux, and Symbian OSs.
+ Windows CE, Linux, and Symbian operating systems.
  Lastly, the Beagle Board incorporates the PowerVR SGX chipset, a OpenGL
  ES 2.0 capable 2D/3D graphics accelerator capable of rendering 10 million
  polygons per second.
  Meeting the fourth requirement, this GPU would allow parallel rendering
  to benchmark the quantitative and qualitative performance of the FPGA implement
 ation.
- Below, 
+ F
 \series bold
-figure 3
+igure 3
 \series default
  shows the Beagle Board and highlights its major features.
 \end_layout
@@ -1024,7 +1025,7 @@ To achieve the goal of this project, three primary objectives must be met:
 
 \begin_layout Itemize
 \paragraph_spacing onehalf
-The graphics accelerator must provide a simple and fast interface for input
+The graphics accelerator must provide a simple and fast input interface
 \end_layout
 
 \begin_layout Itemize
@@ -1046,29 +1047,29 @@ These objectives will be completed through the design and implementation
 
 \begin_layout Standard
 \paragraph_spacing onehalf
-The first objective is for the device to be able to interface with other
- systems that need to display graphics.
- The device should be able to be easily connected to other systems through
- a standard input/output (I/O) format.
- The device should use an easy and intuitive means of communication.
+The first objective is for the device to interface with other systems that
+ need to display graphics.
+ The device should easily connect to other systems through a standard input/outp
+ut (I/O) format, wherein it should use an easy and intuitive means of communicat
+ion.
 \end_layout
 
 \begin_layout Standard
 \paragraph_spacing onehalf
 The second objective is the ability of the device to rasterize a two-dimensional
  (2D) image from the three dimensional (3D) data provided by another system.
- This must be highly efficient, as many images need to be generated per
- second to produce smooth animated visualizations.
- Consequently, optimal algorithms need to be selected to perform these operation
-s on the target hardware.
+ This must be accomplished efficiently because many images need to be generated
+ per second to produce smooth animated visualizations.
+ Consequently, the device must use optimal algorithms to perform these operation
+s.
 \end_layout
 
 \begin_layout Standard
 \paragraph_spacing onehalf
-The third and final objective is to provide a means to easily display the
- generated image.
- This means should adhere to a known display output format, allowing for
- the graphics accelerator to be used with many different system platforms.
+The third and final objective is to provide a means to display the generated
+ image.
+ This means should adhere to a standardized display format, allowing the
+ graphics accelerator to be used with many different platforms.
  An output connection, as well as the underlying hardware controller for
  the selected format, should be provided.
 \end_layout
@@ -1081,7 +1082,7 @@ Design Requirements
 \begin_layout Standard
 \paragraph_spacing onehalf
 The design for this project includes 5 subsystems.
- These systems and their responsibilities are described below in 
+ These systems and their responsibilities are described in 
 \series bold
 Table 1
 \series default
@@ -1185,7 +1186,7 @@ Graphics API
 \begin_inset Text
 
 \begin_layout Plain Layout
-Allow a user to easily send graphics data from their applications.
+Allow a user to easily transmit graphics data from their applications.
 \end_layout
 
 \end_inset
@@ -1207,7 +1208,7 @@ Device Driver
 \begin_inset Text
 
 \begin_layout Plain Layout
-Create the interface between software and the graphics hardware.
+Provide the interface between software and the graphics hardware.
 \end_layout
 
 \end_inset
@@ -1299,14 +1300,15 @@ The
 \shape italic
 graphics API
 \shape default
- must define an abstraction layer that allows a user to easily send graphics
- commands and data to the accelerator from their applications.
+ (Application Programming Interface) must define an abstraction layer that
+ allows a user to easily send graphics commands and data to the accelerator
+ from their applications.
  This API must be implemented in a standardized programming language and
  must follow a consistent and logical specification.
  The API must implement all configuration of all graphics features and settings
  of the accelerator.
  The API must also provide an intuitive interface for drawing and manipulating
- graphical data with the GPU.
+ graphical data using the GPU.
 \end_layout
 
 \begin_layout Standard
@@ -1355,7 +1357,7 @@ ns to a framebuffer located in memory.
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \noindent
@@ -1395,10 +1397,9 @@ Software Design Overview
 
 \begin_layout Standard
 The software design for this project implements all of the necessary abstraction
-s for an application programmer to be able to draw 3D data with the graphics
- accelerator.
+s for an application programmer to render 3D data with the graphics accelerator.
  This consists of two primary subsystems, (1) the graphics API and (2) the
- driver.
+ device driver.
  Additionally, the software designs for this project include various test
  modules whose purpose is to qualitatively and quantitatively benchmark
  the FPGA-based graphics accelerator against similiar performing ASIC-based
@@ -1411,9 +1412,9 @@ Graphics API
 \end_layout
 
 \begin_layout Standard
-The graphics API is the software interface to the graphic hardware, allowing
- three-dimensional visualizations to be drawn for an application by envoking
- a logical and standardized set of functions.
+The graphics API is the software interface to the graphics hardware, allowing
+ 3D visualizations to be drawn for an application by envoking a logical
+ and standardized set of functions.
  To be streamlined and hardware independent, the choice was made to implement
  OpenGL ES 1.0 as the graphics API, rather than designing a custom software
  interface.
@@ -1484,9 +1485,9 @@ RTL Design Overview
 \end_layout
 
 \begin_layout Standard
-The RTL design for the graphics accelerator implements a number of subsystems
- to control the various stages of the graphics pipleline and its necessary
- input and output interfaces.
+The Register Transfer Level (RTL) design for the graphics accelerator implements
+ a number of subsystems to control the various stages of the graphics pipleline
+ and its necessary input and output interfaces.
  
 \series bold
 Figure 5
@@ -1502,7 +1503,7 @@ Figure 5
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \noindent
