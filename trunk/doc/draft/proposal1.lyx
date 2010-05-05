@@ -267,6 +267,15 @@ Portable graphics have many applications in mobile and embedded devices.
 Background Research
 \end_layout
 
+\begin_layout Standard
+Before making any design decisions, it is vital to understand the current
+ state of portable graphics hardware and technology.
+ The chapter discusses what the graphics pipeline is and the necessary concerns
+ that must be taken into consideration to make an implementation of one
+ feasible on an FPGA.
+ 
+\end_layout
+
 \begin_layout Subsection
 Portable Graphics
 \end_layout
@@ -387,7 +396,7 @@ ion is done at the various stages.
  The output of this system is an image updating in realtime that can be
  drawn by a display device.
  This section describes the high level functionality of these stages, and
- how they interact with eachother.
+ how they interact with each other.
 \end_layout
 
 \begin_layout Subsubsection
@@ -395,7 +404,20 @@ Front End
 \end_layout
 
 \begin_layout Standard
-TODO
+With graphics hardware, a the front end provides the necessary interface
+ for all commands and data to be sent to the GPU.
+ Typically, this block consists of a number of different of different layers.
+ At a most basic level, these are: (1) a device driver on the host system,
+ (2) a hardware interface physically connecting the GPU to the host system,
+ and (3) a command processor that receives and decodes commands and data
+ from the hardware interface.
+ After this third layer, decoded commands and data are then used to define
+ the operations of the GPU and render visualizations by distributing them
+ to the other components within the graphics hardware.
+ It can be noted that can be implemented with just a write interface, however
+ it is often advantageous to have certain read signals with many applications.
+ The most important of these is for initiating an interrupt request upon
+ completion of drawing a frame.
 \end_layout
 
 \begin_layout Subsubsection
@@ -403,7 +425,20 @@ Vertex Processing
 \end_layout
 
 \begin_layout Standard
-TODO
+With 3D graphics processing, a vertex is typically a vector of three numbers
+ that represent a discrete position in space.
+ These are often accompanied by many other vectors, representing such things
+ as shading color, texture coordinates, or normal direction.
+ The vertex processing block is responsible for decoding these data received
+ by the GPU and preparing them to be assembled as primitives and then rasterized.
+ For this to be done, the vertex positions must be transformed from the
+ 3D space that they are defined in to 2D space that can eventually be approximat
+ed on a display device.
+ This stage is referred to as perspective transformation, as it transforms
+ objections to be drawn as they appear from the viewer's perspective.
+ Additionally, this block will also transform vertex data within 3D dimensional
+ space, providing hardware accelerated rotation, translation, and scaling
+ of objects in space.
 \end_layout
 
 \begin_layout Subsubsection
@@ -412,13 +447,12 @@ Primitive Assembly
 
 \begin_layout Standard
 A primitive is one or more vertices making up a point, line, or polygon.
- This stage takes transformed vertices from modelview transformations during
- vertex processing stage to produce primitives.
- Primitives are then clipped to fit just within the viewport or view volume.
-\end_layout
-
-\begin_layout Standard
-TODO
+ This stage takes transformed vertices from perspective transformations
+ during vertex processing stage to produce primitives.
+ Primitives are then clipped to fit just within the viewport or view volume,
+ and prepared to be rasterized to the display device.
+ The primitive data are then typically passed from this stage to the rasterizer
+ within some form of buffer.
 \end_layout
 
 \begin_layout Subsubsection
@@ -514,14 +548,6 @@ Z-Buffer
 \end_layout
 
 \begin_layout Subsubsection
-Fragment Processing
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Subsubsection
 Frame Buffer
 \end_layout
 
@@ -549,7 +575,7 @@ key "theoharis"
 \end_inset
 
  This intermediate storage between the graphics pipeline and the output
- display is necessary because the two are not synchronized with eachother.
+ display is necessary because the two are not synchronized with each other.
  Displays are typically clocked, which dependent on both the display resolution
  and refresh rate.
  Display updates are synchronous processes, performing continuously and
@@ -580,8 +606,8 @@ key "theoharis"
 \end_layout
 
 \begin_layout Standard
-Unfortunately, due to the conclict between GPU's random access to the frame
- buffer and the display device's sequential access, many issues arrise.
+Unfortunately, due to the conflict between GPUs random access to the frame
+ buffer and the display device's sequential access, many issues arise.
  Primarily, it is very likely that the display device will begin reading
  a 
 \shape italic
@@ -671,8 +697,9 @@ Fixed-Point Computations
 
 \begin_layout Standard
 Floating-point units (FPUs), the components of CPUs used to natively perform
- arithmatic on floating point numbers, are often not available on FPGAs
- and few and far between on low-power micocontrollers and microprocessors.
+ arithmatic operations on floating point numbers, are often not available
+ on FPGAs and few and far between on low-power micocontrollers and microprocesso
+rs.
  With these, floating point math may be implemented in software, or simply
  not used at all.
  On such devices, reasonable computational performance can likely be achieved
@@ -691,16 +718,16 @@ fixed
 
  before a specific digit.
  For example, during integer math, the decimal is placed after the least
- signicant bit (LSB), meaning that there is no memory allocated for a possible
- fraction.
- In this scenerio, the fraction is discarded and the result of a computation
+ significant bit (LSB), meaning that there is no memory allocated for a
+ possible fraction.
+ In this scenario, the fraction is discarded and the result of a computation
  is rounded to simply whole numbers.
  However, it is possible to fix the decimal point at a different position
  within the number.
  This allows for fractions to be represented, even if they are still just
  rounded approximations.
  With this form of number representation, math can be done by a traditional
- arithmatic logic unit (ALU) and 3D vectors may still be approximated enough
+ arithmetic logic unit (ALU) and 3D vectors may still be approximated enough
  to render realistic visualizations.
  This incorporates simple integer math, along with some additional steps
  to account for the decimal point position.
