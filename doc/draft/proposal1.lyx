@@ -252,10 +252,105 @@ pagenumbering{arabic}
 Introduction
 \end_layout
 
-\begin_layout Itemize
-Portable graphics have many applications in mobile and embedded devices.
+\begin_layout Standard
+With the growing popularity of a wide variety of mobile and embedded devices
+ capable of three-dimensional graphics, it's prudent to consider the direction
+ of evolution of such devices.
+ While many devices capable of realizing 3D graphics currently do so through
+ the implementation of application-specific integrated circuit (ASIC) designs,
+ it may be worth considering the implementation of field-programmable gate
+ arrays (FPGA) for future designs of mobile 3D graphics devices.
+ An FPGA design may implement a hardware descriptor language (HDL) and may
+ be fully configurable, making this appealing to many developers.
+ Because the FPGA is a relatively small and powerful type of chip, its applicati
+ons are implicitly scalable and portable.
+ These characteristics are ideal for mobile and embedded devices.
+ Furthermore, the use of parallel processing on the FPGA is conducive to
+ applications such as graphics rendering.
+ For these main reasons, implementing FPGA designs to realize the rendering
+ of 3D graphics in mobile devices could become a great advance over current
+ ASIC technology.
 \end_layout
 
+\begin_layout Standard
+Current technology trends have precipitated some new graphics processing
+ units that reside on a single chip that performs 3D rendering.
+ However, these designs are few and far between.
+ Furthermore, they aren't necessarily as customizable or affordable as developer
+s may like.
+ The requirements of such a design include some concrete implementation
+ of the graphics pipeline, including all relevant input, output and processing
+ hardware as well as device software.
+\end_layout
+
+\begin_layout Standard
+These requirements may be met using an FPGA design approach.
+ In this design, the FPGA would carry out the stages of the graphics pipeline
+ using an HDL.
+ The FPGA would also provide the hardware implementation of any input and
+ output interfaces in addition to driving the display controller.
+ A graphics application programming interface (API) would be adapted in
+ software from an OpenGL library such as OpenGL ES, which would allow communicat
+ion with the FPGA via a custom device driver depending on the hardware chosen.
+\end_layout
+
+\begin_layout Itemize
+background
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+gfx tech evolved over the years; become smaller and more compact.
+ society has driven the need for gfx tech to be used with more and more
+ applications e.g.
+ 3d rendering on a cell phone.
+ mobile computing, netbooks, smart phones.
+ data vis.
+\end_layout
+
+\begin_layout Itemize
+current technology: some gpu are on a chip that do 3d rendering.
+ there aren't that many, aren't necessarily customizable and cost effective
+\end_layout
+
+\begin_layout Itemize
+parallelism-pipeline...with gfx pipeline, stages run both dependent and independent
+ly.
+ impl using multiple coprocessors.
+ FPGA can do this on its own.
+\end_layout
+
+\begin_layout Itemize
+considerations-fixed point; special approach needed.
+ algorithms could be optimized for this platform
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+design, why it meets what we say
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+input interface (partially software), output interface, gfx hardware on
+ the chip, and gfx api (opengl es-software), device driver (software)
+\end_layout
+
+\begin_layout Itemize
+opengl software via device driver to communicate with fpga hardware to render
+ graphics
+\end_layout
+
+\begin_layout Itemize
+stages of gfx pipeline implemented in a hardware descriptor language
+\end_layout
+
+\begin_layout Itemize
+fpga provides hardware implemenation of any input output interfaces and
+ driving any display controllers
+\end_layout
+
+\end_deeper
 \begin_layout Standard
 \begin_inset Newpage pagebreak
 \end_inset
@@ -576,7 +671,7 @@ key "theoharis"
 
  This intermediate storage between the graphics pipeline and the output
  display is necessary because the two are not synchronized with each other.
- Displays are typically clocked, which dependent on both the display resolution
+ Displays are typically clocked, which depend on both the display resolution
  and refresh rate.
  Display updates are synchronous processes, performing continuously and
  sequentially by a constant clock signal.
@@ -1530,7 +1625,7 @@ Figure 5
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \noindent
