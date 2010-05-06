@@ -273,84 +273,40 @@ ons are implicitly scalable and portable.
 \end_layout
 
 \begin_layout Standard
-Current technology trends have precipitated some new graphics processing
- units that reside on a single chip that performs 3D rendering.
- However, these designs are few and far between.
- Furthermore, they aren't necessarily as customizable or affordable as developer
-s may like.
+Current technology trends have precipitated newer graphics processing units
+ (GPUs) that can produce three 3D visualizations on compact and portable
+ devices.
+ These may reside on a single chip and can typically perform advanced 3D
+ rendering techniques, including programmable pixel and vertex processors.
+ However, such implementations are only realizable by the few major graphics
+ hardware vendors.
+ This is due to the massive cost and overhead of developing such devices.
+ Furthermore, once such hardware is developed, it can no longer be customized
+ or improved until a subsequent generation of chips.
  The requirements of such a design include some concrete implementation
  of the graphics pipeline, including all relevant input, output and processing
  hardware as well as device software.
+ These requirements may be met using an FPGA-based design approach.
+ 
 \end_layout
 
 \begin_layout Standard
-These requirements may be met using an FPGA design approach.
- In this design, the FPGA would carry out the stages of the graphics pipeline
- using an HDL.
+With such a design, the stages of the graphics pipeline and all of its necessary
+ subsystems would be implemented on an FPGA using an HDL.
+ Taking advantage of the FPGA's parallel nature, advanced 3D mathematical
+ algorithms may be processed while other rendering operations are performed.
  The FPGA would also provide the hardware implementation of any input and
  output interfaces in addition to driving the display controller.
  A graphics application programming interface (API) would be adapted in
- software from an OpenGL library such as OpenGL ES, which would allow communicat
-ion with the FPGA via a custom device driver depending on the hardware chosen.
+ software from an OpenGL library such as OpenGL ES, which provides a cross-platf
+orm interface for 3D rendering on embedded systems.
+ Such an implementation would allow communication with the FPGA via a custom
+ device driver, dependent on the hardware chosen.
+ This proposed project would furthermore implement the necessary test and
+ benchmarking software modules to evaluate such a design, comparing its
+ effectiveness against ASIC graphics accelerators.
 \end_layout
 
-\begin_layout Itemize
-background
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-gfx tech evolved over the years; become smaller and more compact.
- society has driven the need for gfx tech to be used with more and more
- applications e.g.
- 3d rendering on a cell phone.
- mobile computing, netbooks, smart phones.
- data vis.
-\end_layout
-
-\begin_layout Itemize
-current technology: some gpu are on a chip that do 3d rendering.
- there aren't that many, aren't necessarily customizable and cost effective
-\end_layout
-
-\begin_layout Itemize
-parallelism-pipeline...with gfx pipeline, stages run both dependent and independent
-ly.
- impl using multiple coprocessors.
- FPGA can do this on its own.
-\end_layout
-
-\begin_layout Itemize
-considerations-fixed point; special approach needed.
- algorithms could be optimized for this platform
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-design, why it meets what we say
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-input interface (partially software), output interface, gfx hardware on
- the chip, and gfx api (opengl es-software), device driver (software)
-\end_layout
-
-\begin_layout Itemize
-opengl software via device driver to communicate with fpga hardware to render
- graphics
-\end_layout
-
-\begin_layout Itemize
-stages of gfx pipeline implemented in a hardware descriptor language
-\end_layout
-
-\begin_layout Itemize
-fpga provides hardware implemenation of any input output interfaces and
- driving any display controllers
-\end_layout
-
-\end_deeper
 \begin_layout Standard
 \begin_inset Newpage pagebreak
 \end_inset
@@ -372,50 +328,6 @@ Before making any design decisions, it is vital to understand the current
 \end_layout
 
 \begin_layout Subsection
-Portable Graphics
-\end_layout
-
-\begin_layout Subsubsection
-Historical Context
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Subsubsection
-Applications
-\end_layout
-
-\begin_layout Itemize
-Mobile Computing
-\end_layout
-
-\begin_layout Itemize
-Embedded Systems
-\end_layout
-
-\begin_layout Subsubsection
-Current ASIC Technology
-\end_layout
-
-\begin_layout Itemize
-NVIDIA Tegra
-\end_layout
-
-\begin_layout Itemize
-PowerVR SGX
-\end_layout
-
-\begin_layout Subsubsection
-OpenGL ES
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Subsection
 Graphics Rendering Pipeline
 \end_layout
 
@@ -430,7 +342,7 @@ n for the process that of which modern graphics processing units (GPUs)
  and (6) frame buffer output.
  These stages all run in parallel, however it is important to note that
  data passes through each of them sequentially.
- Figure 1 below shows the graphics pipeline, as implemented by OpenGL:
+ Below shows the graphics pipeline, as implemented by OpenGL:
 \end_layout
 
 \begin_layout Standard
@@ -570,14 +482,14 @@ rasterization
  is the stage within the graphics rendering pipeline where a 2D image is
  generated from transformed primitive data.
  More formally, rasterization is defined as converting a line drawing, mathemati
-cal expression in space, or a 3D scene into intensity values into an image
- buffer, and then propagating them to an output device.
+cal expression in space, or a 3D scene into intensity values to be written
+ to an image buffer, which is then propagated to an output device.
  Within rasterization, 
 \shape italic
 interpolation
 \shape default
  is the process of constructing new data points - in the form of color intensity
- values - within the discrete range connecting two vertexes.
+ values - within the discrete range connecting two vertices.
  With computer graphics, interpolation is necessary for generating vertex
  colors and fog, among other things.
  
@@ -616,30 +528,6 @@ Z-buffer
  rasterizing these, as well as proper methods of clipping and Z-buffer generatio
 n.
  
-\end_layout
-
-\begin_layout Standard
-TODO:
-\end_layout
-
-\begin_layout Itemize
-Point rasterization algorithm
-\end_layout
-
-\begin_layout Itemize
-Line rasterization algorithm
-\end_layout
-
-\begin_layout Itemize
-Triangle rasterization algorithm
-\end_layout
-
-\begin_layout Itemize
-Clipping algorithm(s)
-\end_layout
-
-\begin_layout Itemize
-Z-Buffer
 \end_layout
 
 \begin_layout Subsubsection
@@ -774,16 +662,41 @@ key "theoharis"
 3D Mathematics
 \end_layout
 
+\begin_layout Standard
+Graphics accelerators exist to implement the required mathematics to render
+ 3D visualizations more efficiently than computer CPUs.
+ These mathematics are often complex and provide all of the necessary routines
+ to formulate a 3D scene, and animate it as needed.
+ This section describes the foundational concepts of these operations, as
+ well as the necessary considerations for implementing such routines on
+ an FPGA.
+\end_layout
+
 \begin_layout Subsubsection
 Transformation
 \end_layout
 
-\begin_layout Itemize
-Model space: affine transformations such as scaling, rotation and translation
-\end_layout
-
-\begin_layout Itemize
-View space: projection modes such as perspective and orthogonal
+\begin_layout Standard
+Modern computer graphics accelerators typically take advantage of highly
+ optimized math co-processors to perform floating point transformations
+ of objects in 3D space.
+ Transformation is divided into two categories.
+ The first of these is 
+\shape italic
+modelview
+\shape default
+ transformation, which provides the necessary operations to translate, rotate,
+ and scale objects.
+ The second of these is 
+\shape italic
+perspective
+\shape default
+ transformation, which transforms objects in 3D space so that they will
+ appear on a 2D display as if they were being viewed from the camera's perspecti
+ve.
+ All of these transformations are implemented via matrix multiplications,
+ with specially defined scale, rotate, translate, and perspective matrices.
+ 
 \end_layout
 
 \begin_layout Subsubsection
@@ -792,18 +705,18 @@ Fixed-Point Computations
 
 \begin_layout Standard
 Floating-point units (FPUs), the components of CPUs used to natively perform
- arithmatic operations on floating point numbers, are often not available
+ arithmetic operations on floating point numbers, are often not available
  on FPGAs and few and far between on low-power micocontrollers and microprocesso
 rs.
  With these, floating point math may be implemented in software, or simply
  not used at all.
  On such devices, reasonable computational performance can likely be achieved
- using fixed-point arithmatic for 3D mathematics rather than a software-defined
- FPU.
+ using fixed-point arithmetic operations for 3D mathematics rather than
+ a software-defined FPU.
 \end_layout
 
 \begin_layout Standard
-With fixed-point arithmatic, the decimal point of a number is 
+With fixed-point arithmetic, the decimal point of a number is 
 \begin_inset Quotes eld
 \end_inset
 
@@ -826,40 +739,7 @@ fixed
  to render realistic visualizations.
  This incorporates simple integer math, along with some additional steps
  to account for the decimal point position.
- Depending on the operation performed, the following additional steps must
- be taken: 
-\end_layout
-
-\begin_layout Itemize
-
-\series bold
-Addition
-\series default
-- TODO
-\end_layout
-
-\begin_layout Itemize
-
-\series bold
-Subtraction
-\series default
-- TODO
-\end_layout
-
-\begin_layout Itemize
-
-\series bold
-Multiplication
-\series default
-- TODO
-\end_layout
-
-\begin_layout Itemize
-
-\series bold
-Division
-\series default
-- TODO
+ 
 \end_layout
 
 \begin_layout Standard
@@ -884,16 +764,13 @@ This is due to the frequent need for a signed most significant bit (MSB),
 Target Platforms
 \end_layout
 
-\begin_layout Subsubsection
-Field Programmable Gate Arrays (FPGAs)
-\end_layout
-
-\begin_layout Itemize
-Overview of technology
-\end_layout
-
-\begin_layout Itemize
-Advantages and disadvantages for graphics acceleration
+\begin_layout Standard
+This project will require two target platforms, the FPGA development board
+ for the system to be developed on, and the embedded system to serve as
+ the host device that must utilize the graphics accelerator to render 3D
+ visualizations.
+ This section proposes the selected platforms and discusses how the selected
+ devices meet the needs of the project.
 \end_layout
 
 \begin_layout Subsubsection
@@ -917,8 +794,8 @@ key "spartan1"
  hard memory, block RAM, high performance clocking and serial IO, and an
  integrated PCI-Express (PCI-E) endpoint block.
  The Spartan-6 LTX is Xilinx's ideal offering for FPGA-based graphics accelerati
-on as it balances both pricepoint and the resources necessary for GPU computatio
-ns.
+on as it balances both price-point and the resources necessary for GPU computati
+ons.
  
 \end_layout
 
@@ -938,11 +815,7 @@ key "spartan1"
  the Spartan 6.
  Additionally, the kit includes DVI video output, a 200MHz oscillator, 128MB
  of DDR3 memory, and various expansion connections.
- 
-\series bold
-Figure 2
-\series default
- shows the SP605 board.
+ The figure below shows the SP605 board.
 \end_layout
 
 \begin_layout Standard
@@ -1048,11 +921,7 @@ key "beagle1"
  Meeting the fourth requirement, this GPU would allow parallel rendering
  to benchmark the quantitative and qualitative performance of the FPGA implement
 ation.
- F
-\series bold
-igure 3
-\series default
- shows the Beagle Board and highlights its major features.
+ Below shows the Beagle Board and highlights its major features.
 \end_layout
 
 \begin_layout Standard
@@ -1471,7 +1340,7 @@ ns to a framebuffer located in memory.
  located on the SP605.
  Next, data from the framebuffer will be synchronously sent to the display
  device, using the SP605's Digital Video Interface (DVI) control circuitry.
- Figure 4 below provides a simple overall system diagram of the graphic
+ The figure below provides a simple overall system diagram of the graphic
  hardware and its input and output interfaces.
 \end_layout
 
@@ -1479,7 +1348,7 @@ ns to a framebuffer located in memory.
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \noindent
@@ -1524,7 +1393,7 @@ s for an application programmer to render 3D data with the graphics accelerator.
  device driver.
  Additionally, the software designs for this project include various test
  modules whose purpose is to qualitatively and quantitatively benchmark
- the FPGA-based graphics accelerator against similiar performing ASIC-based
+ the FPGA-based graphics accelerator against similar performing ASIC-based
  graphics devices.
  
 \end_layout
@@ -1535,7 +1404,7 @@ Graphics API
 
 \begin_layout Standard
 The graphics API is the software interface to the graphics hardware, allowing
- 3D visualizations to be drawn for an application by envoking a logical
+ 3D visualizations to be drawn for an application by invoking a logical
  and standardized set of functions.
  To be streamlined and hardware independent, the choice was made to implement
  OpenGL ES 1.0 as the graphics API, rather than designing a custom software
@@ -1562,14 +1431,14 @@ Driver
 \begin_layout Standard
 The driver will perform all communication between the application (or operating
  system) and the graphics hardware.
- The driver will either run in (A) userspace or (B) kernel space, dependent
+ The driver will either run in (A) user space or (B) kernel space, dependent
  on the chosen I/O format.
  Presently, potentially feasible I/O formats are being explored, including:
  General Purpose I/O (GPIO), Serial Peripheral Interface (SPI), PCI-Express,
  and Universal Serial Bus (USB).
  If implemented in kernel space, the driver will follow a known driver model
  (Linux or Windows).
- If implemented in userspace, the driver may potentially be implemented
+ If implemented in user space, the driver may potentially be implemented
  as a linked library to be included with an application utilizing the graphics
  hardware.
  This decision will be made once a final input interface platform is decided
@@ -1608,13 +1477,10 @@ RTL Design Overview
 
 \begin_layout Standard
 The Register Transfer Level (RTL) design for the graphics accelerator implements
- a number of subsystems to control the various stages of the graphics pipleline
+ a number of subsystems to control the various stages of the graphics pipeline
  and its necessary input and output interfaces.
- 
-\series bold
-Figure 5
-\series default
- below provides a system diagram for the RTL hardware design of the project.
+ The figure below provides a system diagram for the RTL hardware design
+ of the project.
  This system performs the necessary steps to render 3D graphics to an output
  display device from an input command stream, provided by the host controller,
  a microcontroller or a microprocesser system.
@@ -1681,7 +1547,7 @@ Video Interface
  (VI), which runs independently of the other subsystems, constantly refreshing
  the output display device signals.
  Below shows an example execution for a program that draws simple 3D primitives
- with the proposed implemention.
+ with the proposed implementation.
 \end_layout
 
 \begin_layout Enumerate
@@ -2735,10 +2601,10 @@ The Matrix Processor implements all matrix commands, as well as the two
 
 \begin_layout Standard
 The Geometry Processor performs all of the necessary routines to prepare
- incoming vertice streams to be rasterized to the frame buffer.
+ incoming vertex streams to be rasterized to the frame buffer.
  Upon receiving a VTX_BEGIN command, the GP begins processing a vertex list
  of the specified primitive type (points, lines, or triangles).
- To do this, the VTU envokes the following sequence of events:
+ To do this, the VTU invokes the following sequence of events:
 \end_layout
 
 \begin_layout Enumerate
@@ -2809,12 +2675,12 @@ The Rasterizer's main purpose is to perform all of the drawing to the framebuffe
 r.
  The RAS performs this in two steps, (1) primitive rasterization, the process
  of computing the necessary pixels to be written to approximate points,
- lines, and triangles, and (2) color rasterization, the process of deteriming
+ lines, and triangles, and (2) color rasterization, the process of determining
  the necessary pixel color via interpolation.
  The rasterizer reads data from VBANK1 upon being signaled by the DRAWDONE
  command from the GPU.
  At this time, the RAS rasterizes all vertices in VBANK1 to the framebuffer,
- envoking the necessary rastization algorithm depending on the current primitive
+ invoking the necessary rastization algorithm depending on the current primitive
  type.
  
 \end_layout
@@ -2858,6 +2724,447 @@ The Video Interface provides all of the necessary interfacing to the output
 er 1 synchronously with the vertical and horizontal timing signals.
  The VI feeds back a single active-high control signal to the GPU, indicating
  when it is in the VBLANK phase, for synchronization purposes.
+\end_layout
+
+\begin_layout Subsection*
+\noindent
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{section}{Appendix A: Detailed Project Schedule}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Appendix A: Detailed Project Schedule
+\end_layout
+
+\begin_layout Standard
+The implementation of this project will be completed between August and
+ December of 2010.
+ It has been broken up into 4 phases.
+ These are: (1) development, (2) test and benchmarking, and (3) documentation.
+ This section describes each of these phases, as well as a detailed timeline
+ for the project.
+\end_layout
+
+\begin_layout Subsection*
+Development Phase
+\end_layout
+
+\begin_layout Standard
+The development phase deals specifically with implementing the hardware
+ and software designs for the FPGA-based graphics accelerator.
+ The phase will begin in early August and last until the end of October,
+ which primarily consists of term A10.
+ With this phase, it is the team's goal to ensure that all necessary hardware
+ input interfaces are implemented prior to September such that software
+ can be developed starting A10.
+ Furthermore, to ensure that software and hardware development be independent
+ of each other, a software-based graphics accelerator simulator will be
+ implemented over the course of the summer (See Appendix B).
+\end_layout
+
+\begin_layout Subsection*
+Test and Benchmarking Phase
+\end_layout
+
+\begin_layout Standard
+The test and benchmarking phase deals specifically with evaluating the implement
+ation of the graphics accelerator and its software interfaces.
+ This phase will begin at the end of October and span the month of November,
+ consisting mainly of the first half of term B10.
+ With this phase, it is the team's goal to ensure that the implementation
+ meets all of the proposed requirements.
+ Furthermore, this phase will evaluate the qualitative and quantitative
+ performance of the implementation, comparatively to other portable graphics
+ devices.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Documentation Phase
+\end_layout
+
+\begin_layout Standard
+The documentation phase is the last section of the project deals specifically
+ with documenting the entire implementation of the project, and producing
+ a coherent report from this.
+ Furthermore, this report will provide all of the necessary background,
+ proposed design, and other supplemental information for this project.
+ This phase will officially begin at the end of November, and last until
+ the end of term B10, December 16th.
+ However, this phase is more specifically devoted to finalizing the report
+ and adding lacking sections to it, as the report will slowly be developed
+ over the course of the entire project.
+\end_layout
+
+\begin_layout Subsection*
+Gantt Chart
+\end_layout
+
+\begin_layout Standard
+This section presents the detailed timeline for the project schedule.
+ The schedule is broken down by phase, and each phase is then broken down
+ by each component of the project.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Graphics
+	filename image/gantt-page1.png
+	lyxscale 25
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Graphics
+	filename image/gantt-page2.png
+	lyxscale 25
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{section}{Appendix B: Graphics Accelerator Simulator
+ (GA-SIM)}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Appendix B: Graphics Accelerator Simulator (GA-SIM)
+\end_layout
+
+\begin_layout Standard
+The graphics accelerator simulator (GA-SIM) is a software implementation
+ of the proposed hardware design that will allow the software components
+ of the project to be developed independent of the actual hardware implementatio
+n.
+ This simulator will accomplish this by implementing a software renderer
+ that has all of the proposed functionality of the hardware and uses the
+ same command write interface for render control.
+ With GA-SIM, the graphics API and test module components of the project
+ will be able to be fully implemented and tested without the needing the
+ actual FPGA interfaces.
+ Additionally, GA-SIM allows for a more finalized design to be better realized
+ by providing a test bed for implementing and debugging graphics algorithms
+ and other design decisions.
+ Furthermore, it provides a benchmark to compare with the hardware implementatio
+n.
+\end_layout
+
+\begin_layout Subsection*
+Current Implementation
+\end_layout
+
+\begin_layout Standard
+At the time of this report submission, most components of GA-SIM have been
+ completed.
+ While GA-SIM has a planned development period of July to August, it will
+ be completed well in advance of this period.
+ Currently, the following has been implemented:
+\end_layout
+
+\begin_layout Itemize
+The 
+\series bold
+Video Interface
+\series default
+, with a 16-bit framebuffer and double-buffering and a simulated VBLANK
+ period, which uses Simple DirectMedia Layer (SDL) for windowing and graphics
+ output, allowing for cross-compatibility.
+\end_layout
+
+\begin_layout Itemize
+The 
+\series bold
+Rasterizer
+\series default
+, which incorporates fixed-point rasterization algorithms for lines, triangles,
+ and points, as well as 16-bit color interpolation.
+\end_layout
+
+\begin_layout Itemize
+The 
+\series bold
+Graphics Processing Unit
+\series default
+ command interface, with a fully simulated FIFO and data write, and command
+ decoding for all proposed commands.
+\end_layout
+
+\begin_layout Subsection*
+Example Use
+\end_layout
+
+\begin_layout Standard
+Using GA-SIM is very simple.
+ To alternate between the simulator the and the actual hardware device driver
+ that will be implemented, the C++ test module or graphics API must simply
+ define or undefine the identifier 
+\family typewriter
+USE_GRAPHICS_ACCELERATOR_EMU
+\family default
+.
+ Both the simulator and the driver will implement the same write interface,
+ and as such no further code changes will need to be made.
+ Below shows a simple code example that will draw a pixel to the framebuffer
+ using the PIXEL command with the simulator (and future device driver) interface
+:
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing single
+\noindent
+\begin_inset listings
+lstparams "basicstyle={\small\ttfamily},numbers=left,numberstyle={\small}"
+inline false
+status open
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+// Initialize subsystems 	
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+GPU_OPEN();
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+Vertex myPixel; 	
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+myPixel.x._u16 = myPixel.y._u16 = 10; 	
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+myPixel.col.rgba = 0x001f;
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+// Main demo loop 	
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+for(;;) { 		
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+	// Push the PIXEL command into the FIFO 		
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+	GPU_FIFO_PUT8(PIXEL);
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+	// Push the PIXEL command parameters into the FIFO 		
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+	GPU_FIFO_PUT16(myPixel.x._u16); // Pixel x-coord 		
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+	GPU_FIFO_PUT16(myPixel.y._u16); // Pixel y-coord 	
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+	GPU_FIFO_PUT16(myPixel.col.rgba); // Pixel 16-bit color
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+	// Push the DRAWDONE command into the FIFO (Swap buffers) 		
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+	GPU_FIFO_PUT8(DRAWDONE); 	
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+} 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+This simple code excerpt demonstrates the basic nature of communication
+ with the graphics accelerator, regardless of hardware or simulation.
+ Both GA-SIM and the driver will implement 
+\family typewriter
+GPU_OPEN
+\family default
+ to initialize the hardware, as well as 
+\family typewriter
+GPU_FIFO_PUT
+\family default
+ to push commands and data into the FIFO queue to be processed sequentially
+ by the GPU.
+ Data can be pushed in as a byte, halfword, or word, however the device
+ driver simply implements these as multiple 8-bit FIFO pushes.
+ As described in the design chapter, these low level command calls will
+ be abstracted by the graphics API implementation, such that a programmer
+ using the graphics accelerator will not access them directly.
+ At the time of this proposal, the above demo has been implemented and tested
+ within GA-SIM.
+ The figure below shows a similar but more complex demo, drawing a shaded
+ triangle as it would appear on the actual graphics hardware.
+ 
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename image/ga-sim01.png
+	lyxscale 50
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+GA-SIM Running a simple triangle rasterization demo
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
