@@ -1,0 +1,3 @@
+The main goal of this project is to implement a portable graphics accelerator on a FPGA. This device should provide single-chip 3D graphics acceleration for low-power and space-conscious environments, such as with mobile and embedded systems. Implemented in Hardware Description Language (HDL), this accelerator will be entirely open and configurable, providing a graphics system that can be easily adapted or optimized for specific system requirements.
+
+This project is being developed as a Major Qualifying Project (MQP) at Worcester Polytechnic Institute (WPI).
